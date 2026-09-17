@@ -20,7 +20,7 @@ public class TransaccionDAO {
                     "VALUES(?, ?, ?, ?, ?)";
         
         try (Connection conexion = ConexionDB.obtenerConexion();
-                PreparedStatement stmt = conexion.prepareCall(sql)){
+                PreparedStatement stmt = conexion.prepareStatement(sql)){
             stmt.setString(1, transaccion.getTipo().name());
             stmt.setDouble(2, transaccion.getMonto());
             stmt.setString(3, transaccion.getCategoria());
@@ -33,7 +33,7 @@ public class TransaccionDAO {
     
     public List<Transaccion> listarTodas() throws SQLException{
         List<Transaccion> transacciones = new ArrayList<>();
-        String sql = "SELECT id, tipo, monto, categoria, fecha, descripcion"+
+        String sql = "SELECT id, tipo, monto, categoria, fecha, descripcion "+
                     "FROM transacciones ORDER BY fecha DESC";
         try(Connection conexion = ConexionDB.obtenerConexion();
                 PreparedStatement stmt = conexion.prepareCall(sql);
@@ -82,7 +82,7 @@ public class TransaccionDAO {
     }
     
     public Transaccion buscarPorId(int id) throws SQLException{
-        String sql = "SELECT id, tipo, monto, categoria, fecha, descripcion" + "FROM transacciones WHERE id = ?";
+        String sql = "SELECT id, tipo, monto, categoria, fecha, descripcion " + "FROM transacciones WHERE id = ?";
         
         try (Connection conexion = ConexionDB.obtenerConexion();
                 PreparedStatement stmt = conexion.prepareStatement(sql)){
@@ -107,10 +107,10 @@ public class TransaccionDAO {
     }
     
     public double calcularBalance()throws SQLException{
-        String sql = "SELECT"
-                +"COALESCE(SUM(CASE WHEN tipo = 'INGRESO' THEN monto ELSE 0 END), 0)-"
-                +"COALESCE(SUM(CASE WHEN tipo = 'GASTO' THEN monto ELSE 0 END),0)AS balance"
-                +"FROM transacciones";
+        String sql = "SELECT "
+           + "COALESCE(SUM(CASE WHEN tipo = 'INGRESO' THEN monto ELSE 0 END), 0) - "
+           + "COALESCE(SUM(CASE WHEN tipo = 'GASTO' THEN monto ELSE 0 END), 0) AS balance "
+           + "FROM transacciones";
         try (Connection conexion = ConexionDB.obtenerConexion();
                 PreparedStatement stmt = conexion.prepareStatement(sql);
                 ResultSet rs = stmt.executeQuery()){
