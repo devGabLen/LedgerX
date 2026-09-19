@@ -3,24 +3,19 @@ package com.ledgerx.app;
  *
  * @author gabrielpc
  */
+import com.ledgerx.controller.MainView;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class LedgerX extends Application{
 
+    @Override
     public void start(Stage primaryStage) {
-        Label welcomeLabel = new Label("Bienvenido a LedgerX");
-        welcomeLabel.setStyle("-fx-font-size: 20px");
+        MainView mainView = new MainView();
+        Scene scene = new Scene(mainView, 900, 600);
         
-        StackPane root = new StackPane();
-        root.getChildren().add(welcomeLabel);
-        
-        Scene scene = new Scene(root, 800, 600);
-        
-        primaryStage.setTitle("LedgerX - Personal Finance Manager");
+        primaryStage.setTitle("LedgerX - Personal Financec Manager");
         primaryStage.setScene(scene);
         primaryStage.show();
         

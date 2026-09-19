@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
+import java.util.Map;
 
 public class TestDAO {
     public static void main(String[] args) {
@@ -66,6 +67,18 @@ public class TestDAO {
             System.out.println("Listado final");
             for (Transaccion t : dao.listarTodas()) {
                 System.out.println(t);
+            }
+            
+            System.out.println("\n=== Gastos por categoría ===");
+            Map<String, Double> gastosPorCategoria = dao.obtenerGastosPorCategoria();
+            for (Map.Entry<String, Double> entry : gastosPorCategoria.entrySet()) {
+                System.out.println(entry.getKey() + ": $" + entry.getValue());
+            }
+
+            System.out.println("\n=== Balance por mes ===");
+            Map<String, Double> balancePorMes = dao.obtenerBalancePorMes();
+            for (Map.Entry<String, Double> entry : balancePorMes.entrySet()) {
+                System.out.println(entry.getKey() + ": $" + entry.getValue());
             }
 
         } catch (SQLException e) {

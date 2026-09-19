@@ -13,6 +13,8 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class TransaccionDAO {
     public void insertar(Transaccion transaccion) throws SQLException{
@@ -121,5 +123,41 @@ public class TransaccionDAO {
         }
         return 0.0;
     }
+    
+    public Map<String, Double> obtenerGastosPorCategoria() throws SQLException {
+        Map<String, Double> resultado = new LinkedHashMap<>();
+        String sql = "SELECT categoria, SUM(monto) AS total "
+                + "FROM transacciones "
+                + "WHERE tipo = 'GASTO' "
+                + "GROUP BY categoria "
+                + "ORDER BY total DESC";
+        try (Connection conexion = ConexionDB.obtenerConexion();
+                PreparedStatement stmt = conexion.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()){
+            while (rs.next()){
+                resultado.put(rs.getString("Categoria"), rs.getDouble("total"));
+            }
+        }
+        return resultado;
+    }
+    
+    public Map<String, Double> obtenerBalancePorMes() throws SQLException {
+        Map<String, Double> resultado = new LinkedHashMap<>();
+        String sql = "SELECT TO_CHAR(fecha, 'YYYY-MM') AS mes, "
+                   + "COALESCE(SUM(CASE WHEN tipo = 'INGRESO' THEN monto ELSE 0 END), 0) - "
+                   + "COALESCE(SUM(CASE WHEN tipo = 'GASTO' THEN monto ELSE 0 END), 0) AS balance "
+                   + "FROM transacciones "
+                   + "GROUP BY mes "
+                   + "ORDER BY mes ASC";
+        try (Connection conexion = ConexionDB.obtenerConexion();
+             PreparedStatement stmt = conexion.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()){
+                resultado.put(rs.getString("mes"), rs.getDouble("balance"));
+            }
+        }
+        return resultado;
+    }
+    
     
 }

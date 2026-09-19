@@ -1,4 +1,5 @@
 /home/gabrielpc/NetBeansProjects/LedgerX/src/main/java/com/ledgerx/app/LedgerX.java
+/home/gabrielpc/NetBeansProjects/LedgerX/src/main/java/com/ledgerx/controller/MainView.java
 /home/gabrielpc/NetBeansProjects/LedgerX/src/main/java/com/ledgerx/dao/TransaccionDAO.java
 /home/gabrielpc/NetBeansProjects/LedgerX/src/main/java/com/ledgerx/model/TipoTransaccion.java
 /home/gabrielpc/NetBeansProjects/LedgerX/src/main/java/com/ledgerx/model/Transaccion.java

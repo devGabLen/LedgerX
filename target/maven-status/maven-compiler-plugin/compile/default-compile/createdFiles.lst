@@ -1,5 +1,6 @@
 com/ledgerx/dao/TransaccionDAO.class
 com/ledgerx/util/ConexionDB.class
+com/ledgerx/controller/MainView.class
 com/ledgerx/model/TipoTransaccion.class
 com/ledgerx/util/TestConexion.class
 com/ledgerx/app/LedgerX.class
