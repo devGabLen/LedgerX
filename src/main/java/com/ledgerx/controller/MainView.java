@@ -16,6 +16,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.control.TableCell;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -48,6 +49,7 @@ public class MainView extends  BorderPane{
     
     private GridPane crearFormulario(){
         GridPane grid = new GridPane();
+        grid.getStyleClass().add("card");
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(10));
@@ -89,47 +91,65 @@ public class MainView extends  BorderPane{
     }
     
     private BorderPane crearPanelTabla() {
-        tabla = new TableView<>(datosTabla);
+    tabla = new TableView<>(datosTabla);
 
-        TableColumn<Transaccion, Integer> colId = new TableColumn<>("ID");
-        colId.setCellValueFactory(new PropertyValueFactory<>("id"));
+    TableColumn<Transaccion, Integer> colId = new TableColumn<>("ID");
+    colId.setCellValueFactory(new PropertyValueFactory<>("id"));
 
-        TableColumn<Transaccion, TipoTransaccion> colTipo = new TableColumn<>("Tipo");
-        colTipo.setCellValueFactory(new PropertyValueFactory<>("tipo"));
+    TableColumn<Transaccion, TipoTransaccion> colTipo = new TableColumn<>("Tipo");
+    colTipo.setCellValueFactory(new PropertyValueFactory<>("tipo"));
+    colTipo.setCellFactory(col -> new TableCell<>() {
+        @Override
+        protected void updateItem(TipoTransaccion tipo, boolean empty) {
+            super.updateItem(tipo, empty);
+            if (empty || tipo == null) {
+                setText(null);
+                setGraphic(null);
+            } else {
+                Label badge = new Label(tipo.name());
+                badge.getStyleClass().add(tipo == TipoTransaccion.INGRESO ? "badge-ingreso" : "badge-gasto");
+                setGraphic(badge);
+                setText(null);
+            }
+        }
+    });
 
-        TableColumn<Transaccion, Double> colMonto = new TableColumn<>("Monto");
-        colMonto.setCellValueFactory(new PropertyValueFactory<>("monto"));
+    TableColumn<Transaccion, Double> colMonto = new TableColumn<>("Monto");
+    colMonto.setCellValueFactory(new PropertyValueFactory<>("monto"));
 
-        TableColumn<Transaccion, String> colCategoria = new TableColumn<>("Categoría");
-        colCategoria.setCellValueFactory(new PropertyValueFactory<>("categoria"));
+    TableColumn<Transaccion, String> colCategoria = new TableColumn<>("Categoría");
+    colCategoria.setCellValueFactory(new PropertyValueFactory<>("categoria"));
 
-        TableColumn<Transaccion, LocalDate> colFecha = new TableColumn<>("Fecha");
-        colFecha.setCellValueFactory(new PropertyValueFactory<>("fecha"));
+    TableColumn<Transaccion, LocalDate> colFecha = new TableColumn<>("Fecha");
+    colFecha.setCellValueFactory(new PropertyValueFactory<>("fecha"));
 
-        TableColumn<Transaccion, String> colDescripcion = new TableColumn<>("Descripción");
-        colDescripcion.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
+    TableColumn<Transaccion, String> colDescripcion = new TableColumn<>("Descripción");
+    colDescripcion.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
 
-        tabla.getColumns().addAll(colId, colTipo, colMonto, colCategoria, colFecha, colDescripcion);
+    tabla.getColumns().addAll(colId, colTipo, colMonto, colCategoria, colFecha, colDescripcion);
 
-        Button btnEliminar = new Button("Eliminar seleccionada");
-        btnEliminar.setOnAction(e -> eliminarSeleccionada());
+    Button btnEliminar = new Button("Eliminar seleccionada");
+    btnEliminar.setOnAction(e -> eliminarSeleccionada());
 
-        HBox panelBotones = new HBox(10, btnEliminar);
-        panelBotones.setPadding(new Insets(10, 0, 0, 0));
-        panelBotones.setAlignment(Pos.CENTER_RIGHT);
+    HBox panelBotones = new HBox(10, btnEliminar);
+    panelBotones.setPadding(new Insets(10, 0, 0, 0));
+    panelBotones.setAlignment(Pos.CENTER_RIGHT);
 
-        BorderPane contenedor = new BorderPane();
-        contenedor.setCenter(tabla);
-        contenedor.setBottom(panelBotones);
+    BorderPane contenedor = new BorderPane();
+    contenedor.getStyleClass().add("card");
+    contenedor.setCenter(tabla);
+    contenedor.setBottom(panelBotones);
 
-        return contenedor;
-    }
+    return contenedor;
+}
     
     private HBox crearPanelBalance(){
         labelBalance = new Label("Balance: $0.00");
-        labelBalance.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        labelBalance.getStyleClass().add("balance-value");   // <-- agregar
+
         
         HBox box = new HBox(labelBalance);
+        box.getStyleClass().add("balance-chip"); 
         box.setPadding(new Insets(10));
         box.setAlignment(Pos.CENTER);
         

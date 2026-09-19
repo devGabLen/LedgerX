@@ -21,10 +21,14 @@ public class LedgerX extends Application {
 
         tabPane.getTabs().addAll(tabTransacciones, tabReportes);
 
-        Scene scene = new Scene(tabPane, 900, 600);
+        Scene scene = new Scene(tabPane, 1000, 650);
+        scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
 
         primaryStage.setTitle("LedgerX - Personal Finance Manager");
         primaryStage.setScene(scene);
+        primaryStage.setMinWidth(900);
+        primaryStage.setMinHeight(600);
+        primaryStage.setMaximized(true);
         primaryStage.show();
     }
 
