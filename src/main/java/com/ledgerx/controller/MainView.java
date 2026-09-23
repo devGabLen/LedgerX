@@ -230,25 +230,55 @@ public class MainView extends BorderPane {
     private void guardarOActualizarTransaccion() {
         try {
             TipoTransaccion tipo = comboTipo.getValue();
-            String montoTexto = campoMonto.getText();
+            String montoTexto = campoMonto.getText().trim();
             Categoria categoriaSeleccionada = comboCategoria.getValue();
             LocalDate fecha = campoFecha.getValue();
-            String descripcion = campoDescripcion.getText();
+            String descripcion = campoDescripcion.getText().trim();
 
+            // Validación de campos obligatorios
             if (tipo == null || montoTexto.isBlank() || categoriaSeleccionada == null || fecha == null) {
                 mostrarAlerta("Por favor completa todos los campos obligatorios");
                 return;
             }
 
-            double monto = Double.parseDouble(montoTexto);
+            // Validación de formato numérico
+            double monto;
+            try {
+                monto = Double.parseDouble(montoTexto);
+            } catch (NumberFormatException e) {
+                mostrarAlerta("El monto debe ser un número válido (ej. 150.50)");
+                return;
+            }
+
+            // Validación de rango del monto
+            if (monto <= 0) {
+                mostrarAlerta("El monto debe ser mayor a cero");
+                return;
+            }
+
+            if (monto > 99_999_999.99) {
+                mostrarAlerta("El monto ingresado es demasiado grande");
+                return;
+            }
+
+            // Validación de fecha (no futura)
+            if (fecha.isAfter(LocalDate.now())) {
+                mostrarAlerta("La fecha no puede ser en el futuro");
+                return;
+            }
+
+            // Validación de longitud de descripción
+            if (descripcion.length() > 255) {
+                mostrarAlerta("La descripción no puede superar los 255 caracteres");
+                return;
+            }
+
             String categoria = categoriaSeleccionada.getNombre();
 
             if (transaccionEnEdicion == null) {
-                // Modo creación
                 Transaccion nueva = new Transaccion(tipo, monto, categoria, fecha, descripcion);
                 dao.insertar(nueva);
             } else {
-                // Modo edición
                 transaccionEnEdicion.setTipo(tipo);
                 transaccionEnEdicion.setMonto(monto);
                 transaccionEnEdicion.setCategoria(categoria);
@@ -257,11 +287,9 @@ public class MainView extends BorderPane {
                 dao.actualizar(transaccionEnEdicion);
             }
 
-            cancelarEdicion(); // limpia el formulario y vuelve al modo creación
+            cancelarEdicion();
             cargarDatos();
 
-        } catch (NumberFormatException e) {
-            mostrarAlerta("El monto debe ser un número válido");
         } catch (SQLException e) {
             mostrarAlerta("Error al guardar en la base de datos: " + e.getMessage());
         }
