@@ -1,0 +1,3 @@
+db.url=jdbc:postgresql://localhost:5432/ledgerx
+db.user=ledgerx_user
+db.password=tu_password_real_aqui

@@ -1,0 +1,6 @@
+target/
+*.class
+.netbeans/
+nbactions.xml
+config.properties
+EOF

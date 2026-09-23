@@ -1,4 +1,4 @@
-# LedgerX-- LedgerX database schema
+-- LedgerX database schema
 -- Run this script against the ledgerx database after creating it.
 
 CREATE TABLE transacciones (
